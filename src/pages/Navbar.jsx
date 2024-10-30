@@ -1,11 +1,14 @@
+import { useContext } from "react";
 import { Link, useMatch, useResolvedPath } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from "../contexts/AuthContext";
 
 export default function Navbar() {
     const navigate = useNavigate();
+    const { setToken } = useContext(AuthContext);
     const handleLogout = () => {
-        localStorage.removeItem('isAuthenticated');
-        navigate('/');
+        setToken(null);
+        navigate("/");
     };
 
     return (
