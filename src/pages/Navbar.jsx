@@ -1,20 +1,26 @@
 import { useContext } from "react";
 import { Link, useMatch, useResolvedPath } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
-import { AuthContext } from "../contexts/AuthContext";
+import { getAuth } from "firebase/auth";
+import { AuthContext } from "../contexts/AuthProvider";
 
 export default function Navbar() {
+    const auth = getAuth();
     const navigate = useNavigate();
-    const { setToken } = useContext(AuthContext);
+    const { currentUser } = useContext(AuthContext)
+
+    if (!currentUser) {
+        navigate("/")
+    }
+
     const handleLogout = () => {
-        setToken(null);
-        navigate("/");
-    };
+        auth.signOut();
+    }
 
     return (
         <nav className="nav">
             <Link to="/todolist" className="site-title">
-                ₊✩‧₊˚౨ৎ˚₊✩‧₊ Haru&apos;s Notes ₊✩‧₊˚౨ৎ˚₊✩‧₊
+                ₊✩‧₊˚౨ৎ˚₊✩‧₊ Paimon ₊✩‧₊˚౨ৎ˚₊✩‧₊
             </Link>
             <ul>
                 <CustomLink to="/todolist">Home</CustomLink>

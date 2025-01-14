@@ -1,38 +1,25 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Home from './pages/Home';
 import CalculatorEXPBooks from "./pages/CalculatorEXPBooks"
 import Navbar from "./pages/Navbar";
-import RequireAuth from "./pages/Require.Auth";
+import { AuthProvider } from "./contexts/AuthProvider";
 import TodoList from "./pages/TodoList";
-import { AuthContext } from "./contexts/AuthContext";
-import useLocalStorage from "use-local-storage";
+import AuthPage from "./pages/AuthPage";
+//import { AuthContext } from "./contexts/AuthContext";
+//import useLocalStorage from "use-local-storage";
 
 export default function App() {
-  const [token, setToken] = useLocalStorage("token", null);
+  //const [token, setToken] = useLocalStorage("token", null);
   return (
-    <AuthContext.Provider value={{ token, setToken }}>
+    <AuthProvider>
       <BrowserRouter>
         <Navbar />
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route
-            path="/todolist"
-            element={
-              <RequireAuth>
-                <TodoList />
-              </RequireAuth>
-            }
-          />
-          <Route path="/calculator"
-            element={
-              <RequireAuth>
-                <CalculatorEXPBooks />
-              </RequireAuth>
-            }
-          />
+          <Route path="/" element={<AuthPage />} />
+          <Route path="/todolist" element={<TodoList />} />
+          <Route path="/calculator" element={<CalculatorEXPBooks />} />
         </Routes>
       </BrowserRouter>
-    </AuthContext.Provider>
+    </AuthProvider>
   );
 }
