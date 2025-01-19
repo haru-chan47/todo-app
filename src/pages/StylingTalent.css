@@ -275,30 +275,13 @@ body {
 }
 
 .abyss-timer {
-    position: fixed;
-    /* Change from absolute to fixed for better behavior */
-    top: 10%;
-    /* Use percentages to make it responsive */
+    position: absolute;
+    top: 350px;
     right: 10px;
-    height: auto;
-    /* Let the height adjust automatically */
+    height: 30px;
     display: flex;
     align-items: flex-end;
-    z-index: 10;
-    /* Ensure it stays above other elements */
 }
-
-@media (max-width: 768px) {
-    .abyss-timer {
-        top: auto;
-        /* Adjust position for smaller screens */
-        bottom: 10px;
-        /* Move it to the bottom */
-        right: 5px;
-        /* Add some padding */
-    }
-}
-
 
 .abyss-image {
     width: 180px;
