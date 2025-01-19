@@ -6,7 +6,7 @@ import {
     signInWithPopup,
 } from "firebase/auth";
 import { useContext, useEffect, useState } from "react";
-import { Button, Col, Form, Image, Modal, Row } from "react-bootstrap";
+import { Button, Col, Form, Image, Modal } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../contexts/AuthProvider";
 
@@ -73,11 +73,11 @@ export default function AuthPage() {
                     <Button className="rounded-pill" variant="outline-dark" style={{ backgroundColor: 'white', color: 'black' }} onClick={handlgeGoogleLogin}>
                         <i className="bi bi-google"></i> Sign up with Google
                     </Button>
-                    <p style={{ textAlign: "center", color: 'white' }}>or</p>
+                    <p style={{ textAlign: "center" }}>or</p>
                     <Button className="rounded-pill" onClick={handleShowSignUp}>
                         Create an account
                     </Button>
-                    <p className="mt-5" style={{ fontWeight: "bold", color: 'white' }}>
+                    <p className="mt-5" style={{ fontWeight: "bold" }}>
                         Already have an account?
                     </p>
                     <Button className="rounded-pill" onClick={handleShowLogin}>
@@ -119,7 +119,7 @@ export default function AuthPage() {
 
                             <p style={{ fontSize: 12 }}>
                                 By signing up, you agree to the Terms of Service and Privacy
-                                Policy, including Cookie Use. SigmaTweets may use your contact
+                                Policy, including Cookie Use. Paimon may use your contact
                                 information, including your email address and phone number for
                                 purposes outlined in our Privacy Policy, like keeping your
                                 account secure and personalising our services, including ads.
