@@ -61,9 +61,9 @@ export default function EXPCalculator() {
                                 <Col className="book-title">Wanderer&apos;s Advice</Col>
                             </Row>
                             <Row>
-                                <Col><img src="/src/images/heros-wit.png" alt="Image of Hero's Wit" className="book-image" /></Col>
-                                <Col><img src="/src/images/adventurers-experience.png" alt="Image of Adventurers Experience" className="book-image" /></Col>
-                                <Col><img src="/src/images/wanderers-advice.png" alt="Image of Wanderer's Advice" className="book-image" /></Col>
+                                <Col><img src="images/heros-wit.png" alt="Image of Hero's Wit" className="book-image" /></Col>
+                                <Col><img src="images/adventurers-experience.png" alt="Image of Adventurers Experience" className="book-image" /></Col>
+                                <Col><img src="images/wanderers-advice.png" alt="Image of Wanderer's Advice" className="book-image" /></Col>
                             </Row>
 
                             <Row className="mt-3">
