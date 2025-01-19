@@ -11,7 +11,7 @@ export default function WeeklyTodoList() {
     const [editTaskContent, setEditTaskContent] = useState("");
     const { currentUser } = useContext(AuthContext);
     const apiBackendUrl = import.meta.env.VITE_API_BACKEND_LINK;
-    const api = `${apiBackendUrl}todolist`
+    const api = `${apiBackendUrl}/todolist`
     const apiWeekly = `${apiBackendUrl}/todolist/weekly`;
     const userId = currentUser ? currentUser.uid : null;
 
