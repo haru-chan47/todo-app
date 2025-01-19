@@ -35,7 +35,7 @@ export default function AbyssReset() {
 
     return (
         <div className="abyss-timer">
-            <p><img src="/src/images/abyss.jpg" alt="Abyss Image" className="abyss-image" /></p>
+            <p><img src="/src/images/abyss.jpg" alt="Abyss Image" className="abyss-image img-fluid" /></p>
             <div className="abyss-reset-timer">
                 {daysLeft} days left before Abyss resets
             </div>

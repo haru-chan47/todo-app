@@ -1,133 +1,169 @@
-import { Button, Card, Form, ListGroup } from "react-bootstrap";
-import AddWeekly from "./AddWeekly";
-import { useEffect, useState } from "react";
-import useLocalStorage from "use-local-storage";
+import { useState, useEffect, useContext } from 'react';
+import axios from 'axios';
+import { Form, Card, ListGroup, Button } from 'react-bootstrap';
+import { AuthContext } from '../contexts/AuthProvider';
 
-export default function WeeklyToDo() {
-    const defaultWeekly = [
-        "Trounce Domains",
-        "Complete Battle Pass Weekly Missions",
-        "Complete 3 Bounties",
-        "Complete 3 Requests",
-        "Collect Realm Currency",
-        "Parametric Transformer"
-    ]
-
-
-    const [weeklyTodo, setWeeklyTodo] = useLocalStorage("weeklyTodo", defaultWeekly);
-    const [showAddWeekly, setShowAddWeekly] = useState(false);
-    const [checkedItems, setCheckedItems] = useLocalStorage("checkedItems", []);
+export default function WeeklyTodoList() {
+    const [weeklyTasks, setWeeklyTasks] = useState([]);
+    const [checkedItems, setCheckedItems] = useLocalStorage("checkedItems", {});
+    const [newTask, setNewTask] = useState("");
     const [isEditing, setIsEditing] = useState(null);
-    const [newWeekly, setNewWeekly] = useState("");
-
-    const getCurrentTime = () => new Date();
-
-    const getResetTime = () => {
-        const now = new Date();
-        const daysUntilNextMonday = (1 - now.getDay() + 7) % 7;
-        //0 = Sunday, 1 = Monday. 
-        // find out how many days until the next Monday: 1-today. eg: 1-2 = -1 (Monday is in the past)
-        //+7 = get positive number + 6days away. 
-        //%7, returning 0 is Monday
-        const nextMonday = new Date(now);
-        nextMonday.setDate(now.getDate() + daysUntilNextMonday); // get date of next Monday
-        nextMonday.setHours(4, 0, 0, 0);
-        return nextMonday;
-    };
-
-    const shouldReset = (lastResetTime) => {
-        const now = getCurrentTime();
-        const resetTime = getResetTime();
-        return now >= resetTime && (!lastResetTime || new Date(lastResetTime) < resetTime);
-    };
-
+    const [editTaskContent, setEditTaskContent] = useState("");
+    const { currentUser } = useContext(AuthContext);
+    const apiBackendUrl = import.meta.env.VITE_API_BACKEND_LINK;
+    const api = `${apiBackendUrl}todolist`
+    const apiWeekly = `${apiBackendUrl}/todolist/weekly`;
+    const userId = currentUser ? currentUser.uid : null;
 
     useEffect(() => {
-        const lastReset = localStorage.getItem("lastResetTime");
-        if (shouldReset(lastReset)) {
-            setWeeklyTodo(defaultWeekly);
-            setCheckedItems([]);
-            localStorage.setItem("lastResetTime", getCurrentTime().toISOString())
-        }
-    }, []);
+        const fetchTasks = async () => {
+            try {
+                if (userId) {
+                    const [weeklyResponse] = await Promise.all([
+                        axios.get(`${apiWeekly}?userId=${userId}`)
+                    ]);
+                    setWeeklyTasks(weeklyResponse.data);
+                }
+            } catch (error) {
+                console.error("Error fetching tasks:", error);
+            }
+        };
+        fetchTasks();
+    }, [userId]);
 
-    const toggleAddWeekly = () => setShowAddWeekly(prev => !prev);
-
-    const addWeeklyTodo = (todo) => {
-        if (!weeklyTodo.includes(todo)) {
-            setWeeklyTodo(prevList => [...prevList, todo])
-        }
-    };
-
-    const removeWeeklyTodo = (todoIndex) => {
-        const updatedWeeklyTodo = [...weeklyTodo];
-        updatedWeeklyTodo.splice(todoIndex, 1);
-        setWeeklyTodo(updatedWeeklyTodo);
-    };
-
-    const handleEdit = (todoIndex) => {
-        setIsEditing(todoIndex); // Set the task index being edited
-        setNewWeekly(weeklyTodo[todoIndex]); // Set the current task value to edit
-    };
-
-    const saveEditedTask = (todo) => {
-        const updatedTodo = [...weeklyTodo];
-        updatedTodo[todo] = newWeekly; // Update task at index
-        setWeeklyTodo(updatedTodo);
-        setIsEditing(null); // Exit editing
-    };
-
-    const handleCheckboxChange = (event) => {
-        const { value, checked } = event.target;
+    const handleCheckboxChange = (event, category, taskId) => {
+        const { checked } = event.target;
         setCheckedItems(prev => {
-            const updatedCheckedItems = checked ? [...prev, value] : prev.filter(item => item !== value);
-            localStorage.setItem('checkedItems', JSON.stringify(updatedCheckedItems)); // Update localStorage with the new checked state
-            return updatedCheckedItems;
+            const updated = { ...prev };
+            if (!updated[category]) updated[category] = {};
+            updated[category][taskId] = checked;
+            localStorage.setItem('checkedItems', JSON.stringify(updated));
+            return updated;
         });
     };
 
-    return (
-        <div className="card-container">
-            <Card className="card">
-                <Card.Header className="card-header">
-                    Weekly
-                    <Button onClick={toggleAddWeekly} className="button"> {showAddWeekly ? 'x' : '+'}</Button>
-                </Card.Header>
-                {showAddWeekly && <AddWeekly onAdd={addWeeklyTodo} />}
-                <ListGroup variant="flush">
-                    {weeklyTodo.length > 0 ? (
-                        weeklyTodo.map((item, index) => (
-                            <ListGroup.Item key={index} className="li">
-                                {isEditing === index ? (
-                                    <>
-                                        <Form.Control
-                                            type="text"
-                                            value={newWeekly}
-                                            onChange={(e) => setNewWeekly(e.target.value)}
-                                        />
-                                        <Button onClick={() => saveEditedTask(index)} className="calculate-button">Save</Button>
-                                    </>
-                                ) : (
-                                    <div className="checkbox-container">
-                                        <Form.Check
-                                            type="checkbox"
-                                            id={`checkbox-${index}`}
-                                            value={item}
-                                            checked={checkedItems.includes(item)}
-                                            onChange={handleCheckboxChange}
-                                        />
-                                        <span className={checkedItems.includes(item) ? "strikethrough" : ""}>{item}</span>
-                                        <Button onClick={() => handleEdit(index)} className="edit-button">✎</Button>
-                                        <Button onClick={() => removeWeeklyTodo(index)} className="remove-button">🗑️</Button>
-                                    </div>
-                                )}
-                            </ListGroup.Item>
-                        ))
-                    ) : (
-                        <ListGroup.Item>No dailies added yet.</ListGroup.Item>
-                    )}
-                </ListGroup>
-            </Card>
-        </div>
+    const handleAddTask = async (category) => {
+        console.log("Task to be added:", {
+            userId,
+            content: newTask.trim(),
+            category,
+        });
+
+        try {
+            const response = await axios.post(api, {
+                userId,
+                content: newTask.trim(),
+                category,
+            });
+
+            console.log("Response from backend:", response.data);
+            setWeeklyTasks(prev => [...prev, response.data]);
+            setNewTask("");
+        } catch (error) {
+            console.error("Error adding task:", error.response || error.message);
+        }
+    }
+
+    const handleEdit = (task) => {
+        setIsEditing(task.id);
+        setEditTaskContent(task.content);
+    };
+
+    const saveEdit = async (taskId) => {
+        try {
+            await axios.put(`${api}/${taskId}`, { content: editTaskContent });
+            setWeeklyTasks((prev) =>
+                prev.map((task) =>
+                    task.id === taskId ? { ...task, content: editTaskContent } : task
+                )
+            );
+            setIsEditing(null);
+        } catch (error) {
+            console.error("Error saving task edit:", error);
+        }
+    };
+
+    const handleDelete = async (taskId) => {
+        try {
+            await axios.delete(`${api}/${taskId}`);
+            setWeeklyTasks((prev) => prev.filter((task) => task.id !== taskId));
+        } catch (error) {
+            console.error("Error deleting task:", error);
+        }
+    };
+
+    const renderTaskList = (tasks, category) => (
+        <ListGroup variant="flush">
+            {tasks.map((task) => (
+                <ListGroup.Item key={task.id} className="li">
+                    <div className="checkbox-container">
+                        <Form.Check
+                            type="checkbox"
+                            id={`checkbox-${category}-${task.id}`}
+                            checked={checkedItems[category]?.[task.id] || false}
+                            onChange={(e) => handleCheckboxChange(e, category, task.id)}
+                        />
+                        {isEditing === task.id ? (
+                            <>
+                                <Form.Control
+                                    type="text"
+                                    value={editTaskContent}
+                                    onChange={(e) => setEditTaskContent(e.target.value)}
+                                />
+                                <Button onClick={() => saveEdit(task.id, category)}>Save</Button>
+                            </>
+                        ) : (
+                            <span className={checkedItems[category]?.[task.id] ? "strikethrough" : ""}>
+                                {task.content}
+                            </span>
+                        )}
+                        <Button onClick={() => handleEdit(task)} className="edit-button">✎</Button>
+                        <Button onClick={() => handleDelete(task.id, category)} className="remove-button">🗑️</Button>
+                    </div>
+                </ListGroup.Item>
+            ))}
+        </ListGroup>
     );
+
+    return (
+        <Card className="card">
+            <Card.Header className="card-header">
+                Weekly
+                <Button onClick={() => handleAddTask("weekly")} className="button">+</Button>
+            </Card.Header>
+            <div className="task-input">
+                <Form.Control
+                    type="text"
+                    placeholder="Add a new weekly task"
+                    value={newTask}
+                    onChange={(e) => setNewTask(e.target.value)}
+                />
+            </div>
+            {renderTaskList(weeklyTasks, 'weekly')}
+        </Card>
+    );
+}
+
+function useLocalStorage(key, initialValue) {
+    const [storedValue, setStoredValue] = useState(() => {
+        try {
+            const item = localStorage.getItem(key);
+            return item ? JSON.parse(item) : initialValue;
+        } catch (error) {
+            console.error("Error accessing localStorage:", error);
+            return initialValue;
+        }
+    });
+
+    const setValue = (value) => {
+        try {
+            const valueToStore = value instanceof Function ? value(storedValue) : value;
+            setStoredValue(valueToStore);
+            localStorage.setItem(key, JSON.stringify(valueToStore));
+        } catch (error) {
+            console.error("Error setting localStorage:", error);
+        }
+    };
+
+    return [storedValue, setValue];
 }

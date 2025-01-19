@@ -2,7 +2,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Arsenal+SC:ital,wght@0,400;0,700;1,400;1,700&display=swap");
 
 body {
-    background-image: url(/src/images/xiao-wallpaper-2.jpg);
+    background-image: url(/src/images/xiao-wallpaper-3.jpg);
     font-family: Verdana, sans-serif;
 }
 
@@ -275,13 +275,30 @@ body {
 }
 
 .abyss-timer {
-    position: absolute;
-    top: 350px;
+    position: fixed;
+    /* Change from absolute to fixed for better behavior */
+    top: 10%;
+    /* Use percentages to make it responsive */
     right: 10px;
-    height: 30px;
+    height: auto;
+    /* Let the height adjust automatically */
     display: flex;
     align-items: flex-end;
+    z-index: 10;
+    /* Ensure it stays above other elements */
 }
+
+@media (max-width: 768px) {
+    .abyss-timer {
+        top: auto;
+        /* Adjust position for smaller screens */
+        bottom: 10px;
+        /* Move it to the bottom */
+        right: 5px;
+        /* Add some padding */
+    }
+}
+
 
 .abyss-image {
     width: 180px;

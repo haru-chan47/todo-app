@@ -84,12 +84,6 @@ export default function AuthPage() {
                     <Button className="rounded-pill" variant="outline-dark" style={{ backgroundColor: 'white', color: 'black' }} onClick={handlgeGoogleLogin}>
                         <i className="bi bi-google"></i> Sign up with Google
                     </Button>
-                    <Button className="rounded-pill" variant="outline-dark" style={{ backgroundColor: 'white', color: 'black' }}>
-                        <i className="bi bi-apple"></i> Sign up with Apple
-                    </Button>
-                    <Button className="rounded-pill" variant="outline-dark" style={{ backgroundColor: 'white', color: 'black' }}>
-                        <i className="bi bi-facebook"></i> Sign up with Facebook
-                    </Button>
                     <p style={{ textAlign: "center", color: 'white' }}>or</p>
                     <Button className="rounded-pill" onClick={handleShowSignUp}>
                         Create an account
