@@ -6,14 +6,12 @@ import {
     signInWithPopup,
 } from "firebase/auth";
 import { useContext, useEffect, useState } from "react";
-// import { Button, Col, Form, Modal, Row } from "react-bootstrap";
 import { Button, Col, Form, Image, Modal, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../contexts/AuthProvider";
 
 export default function AuthPage() {
     const loginImage = "/src/images/Paimon-Thinking.webp";
-    // values: null (no modal show), "login", "signup"
     const [modalShow, setModalShow] = useState(null);
     const handleShowSignUp = () => setModalShow("signup");
     const handleShowLogin = () => setModalShow("login");
@@ -69,17 +67,6 @@ export default function AuthPage() {
                 <Image src={loginImage} fluid />
             </Col>
             <Col sm={6} className="p-4">
-                {/* <i
-                    className="bi bi-twitter"
-                    style={{ fontSize: 50, color: "dodgerblue" }}
-                ></i>
-
-                <p className="mt-5" style={{ fontSize: 64 }}>
-                    Happening Now
-                </p>
-                <h2 className="my-5" style={{ fontSize: 31 }}>
-                    Join Twitter today.
-                </h2> */}
                 <Col sm={5} className="d-grid gap-2">
                     <Button className="rounded-pill" variant="outline-dark" style={{ backgroundColor: 'white', color: 'black' }} onClick={handlgeGoogleLogin}>
                         <i className="bi bi-google"></i> Sign up with Google
