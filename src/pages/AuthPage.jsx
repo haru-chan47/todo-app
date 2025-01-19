@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../contexts/AuthProvider";
 
 export default function AuthPage() {
-    const loginImage = "/src/images/Paimon-Thinking.webp";
+    const loginImage = "images/Paimon-Thinking.webp";
     const [modalShow, setModalShow] = useState(null);
     const handleShowSignUp = () => setModalShow("signup");
     const handleShowLogin = () => setModalShow("login");
@@ -62,11 +62,13 @@ export default function AuthPage() {
     const handleClose = () => setModalShow(null);
 
     return (
-        <Row>
-            <Col sm={6}>
-                <Image src={loginImage} fluid />
-            </Col>
+        <div style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center"
+        }}>
             <Col sm={6} className="p-4">
+                <Image src={loginImage} fluid />
                 <Col sm={5} className="d-grid gap-2">
                     <Button className="rounded-pill" variant="outline-dark" style={{ backgroundColor: 'white', color: 'black' }} onClick={handlgeGoogleLogin}>
                         <i className="bi bi-google"></i> Sign up with Google
@@ -75,15 +77,10 @@ export default function AuthPage() {
                     <Button className="rounded-pill" onClick={handleShowSignUp}>
                         Create an account
                     </Button>
-                    <p style={{ fontSize: "12px", color: 'white' }}> Agree to terms</p>
                     <p className="mt-5" style={{ fontWeight: "bold", color: 'white' }}>
                         Already have an account?
                     </p>
-                    <Button
-                        className="rounded-pill"
-                        variant="outline-primary"
-                        onClick={handleShowLogin}
-                    >
+                    <Button className="rounded-pill" onClick={handleShowLogin}>
                         Sign in
                     </Button>
                 </Col>
@@ -136,6 +133,6 @@ export default function AuthPage() {
                     </Modal.Body>
                 </Modal>
             </Col>
-        </Row>
+        </div>
     );
 }

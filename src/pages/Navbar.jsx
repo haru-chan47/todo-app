@@ -1,20 +1,20 @@
-import { useContext } from "react";
+
 import { Link, useMatch, useResolvedPath } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
 import { getAuth } from "firebase/auth";
-import { AuthContext } from "../contexts/AuthProvider";
+
 
 export default function Navbar() {
     const auth = getAuth();
     const navigate = useNavigate();
-    const { currentUser } = useContext(AuthContext)
 
-    if (!currentUser) {
-        navigate("/")
-    }
-
-    const handleLogout = () => {
-        auth.signOut();
+    const handleLogout = async () => {
+        try {
+            await auth.signOut();
+            navigate("/");  // Navigate to the homepage after logout
+        } catch (error) {
+            console.error("Error signing out: ", error.message);
+        }
     }
 
     return (
