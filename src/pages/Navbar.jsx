@@ -1,20 +1,25 @@
-
-import { Link, useMatch, useResolvedPath } from "react-router-dom";
-import { useNavigate } from 'react-router-dom';
+import { useContext, useEffect } from "react";
+import { Link, useMatch, useResolvedPath, useNavigate } from "react-router-dom";
 import { getAuth } from "firebase/auth";
-
+import { AuthContext } from "../contexts/AuthProvider";
 
 export default function Navbar() {
     const auth = getAuth();
     const navigate = useNavigate();
+    const { currentUser } = useContext(AuthContext);
 
-    const handleLogout = async () => {
-        try {
-            await auth.signOut();
-            navigate("/");  // Navigate to the homepage after logout
-        } catch (error) {
-            console.error("Error signing out: ", error.message);
+    useEffect(() => {
+        if (!currentUser) {
+            navigate("/");
         }
+    }, [currentUser, navigate]);
+
+    const handleLogout = () => {
+        auth.signOut().then(() => {
+            navigate("/");
+        }).catch((error) => {
+            console.error("Error signing out:", error);
+        });
     }
 
     return (
@@ -32,8 +37,8 @@ export default function Navbar() {
 }
 
 function CustomLink({ to, children, ...props }) {
-    const resolvedPath = useResolvedPath(to)
-    const isActive = useMatch({ path: resolvedPath.pathname, end: true })
+    const resolvedPath = useResolvedPath(to);
+    const isActive = useMatch({ path: resolvedPath.pathname, end: true });
 
     return (
         <li className={isActive ? "active" : ""}>
@@ -41,5 +46,5 @@ function CustomLink({ to, children, ...props }) {
                 {children}
             </Link>
         </li>
-    )
+    );
 }
