@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import TheatreReset from './ImaginariumTheatre';
 
 export default function AbyssReset() {
     const [daysLeft, setDaysLeft] = useState(0);
@@ -34,11 +35,15 @@ export default function AbyssReset() {
     }, []);
 
     return (
-        <div className="abyss-timer">
-            <p><img src="images/abyss.jpg" alt="Abyss Image" className="abyss-image img-fluid" /></p>
-            <div className="abyss-reset-timer">
-                {daysLeft} days left before Abyss resets
+        <div className='timer-container'>
+            <div className="abyss-timer">
+                <p><img src="images/abyss.jpg" alt="Abyss Image" className="abyss-image img-fluid" /></p>
+                <div className="abyss-reset-timer">
+                    <p className="mb-1">{daysLeft} days left before</p>
+                    <b className='mt-0'>Abyss resets</b>
+                </div>
+                <TheatreReset />
             </div>
-        </div >
+        </div>
     );
 }

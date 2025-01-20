@@ -312,3 +312,33 @@ body {
     visibility: visible;
     opacity: 1;
 }
+
+.theatre-image {
+    width: 180px;
+    height: 180px;
+    border-radius: 10px;
+}
+
+.theatre-reset-timer {
+    visibility: hidden;
+    background-color: rgba(0, 0, 0, 0.541);
+    color: #fff;
+    margin-left: 6px;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    top: 20px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    font-size: 12px;
+}
+
+.theatre-timer:hover .theatre-reset-timer {
+    visibility: visible;
+    opacity: 1;
+}
+
+.timer-container {
+    align-items: center;
+}
