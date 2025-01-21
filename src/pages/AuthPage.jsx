@@ -62,25 +62,22 @@ export default function AuthPage() {
     const handleClose = () => setModalShow(null);
 
     return (
-        <div style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center"
-        }}>
-            <Col sm={6} className="p-4">
+        <Col sm={6} className="p-4 auth">
+            <h1 className="auth-title">Paimon&apos;s Todo App</h1>
+            <div className="auth-box">
                 <Image src={loginImage} fluid />
                 <Col sm={5} className="d-grid gap-2">
-                    <Button className="rounded-pill" variant="outline-dark" style={{ backgroundColor: 'white', color: 'black' }} onClick={handlgeGoogleLogin}>
+                    <Button className="rounded-pill" style={{ backgroundColor: 'white', color: 'black' }} onClick={handlgeGoogleLogin}>
                         <i className="bi bi-google"></i> Sign up with Google
                     </Button>
                     <p style={{ textAlign: "center" }}>or</p>
-                    <Button className="rounded-pill" onClick={handleShowSignUp}>
+                    <Button className="rounded-pill custom-btn" onClick={handleShowSignUp}>
                         Create an account
                     </Button>
                     <p className="mt-5" style={{ fontWeight: "bold" }}>
                         Already have an account?
                     </p>
-                    <Button className="rounded-pill" onClick={handleShowLogin}>
+                    <Button className="rounded-pill custom-btn" onClick={handleShowLogin}>
                         Sign in
                     </Button>
                 </Col>
@@ -101,7 +98,7 @@ export default function AuthPage() {
                             className="d-grid gap-2 px-5"
                             onSubmit={modalShow === "signup" ? handleSignUp : handleLogin}
                         >
-                            <Form.Group className="mb-3" controlId="formBasicEmai">
+                            <Form.Group className="mb-3" controlId="formBasicEmail">
                                 <Form.Control
                                     onChange={(e) => setUsername(e.target.value)}
                                     type="email"
@@ -132,7 +129,7 @@ export default function AuthPage() {
                         </Form>
                     </Modal.Body>
                 </Modal>
-            </Col>
-        </div>
+            </div>
+        </Col>
     );
 }

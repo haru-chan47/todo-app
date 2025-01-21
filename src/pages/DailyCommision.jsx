@@ -7,10 +7,11 @@ export default function DailyTodoList() {
     const [dailyTasks, setDailyTasks] = useState([]);
     const [checkedItems, setCheckedItems] = useLocalStorage("checkedItems", {});
     const [newTask, setNewTask] = useState("");
+    const [showAddTask, setShowAddTask] = useState(false);
     const [isEditing, setIsEditing] = useState(null);
     const [editTaskContent, setEditTaskContent] = useState("");
     const { currentUser } = useContext(AuthContext);
-    const apiBackendUrl = "https://96af620c-7813-4201-872f-5c47943a6e75-00-38ji603hc5va1.sisko.replit.dev";
+    const apiBackendUrl = "https://8eeebd9a-000f-45a8-a3ed-df5f96632736-00-3gm6kwh0dabnx.pike.replit.dev";
     const api = `${apiBackendUrl}/todolist`
     const apiDaily = `${apiBackendUrl}/todolist/daily`
     const userId = currentUser ? currentUser.uid : null;
@@ -130,7 +131,44 @@ export default function DailyTodoList() {
     );
 
     return (
-        <Card className="card">
+        <div className="card-container">
+            <Card className="card">
+                <Card.Header className="card-header">
+                    Daily
+                    <Button
+                        onClick={() => setShowAddTask(!showAddTask)}
+                        className="button"
+                    >
+                        {showAddTask ? 'x' : '+'}
+                    </Button>
+                </Card.Header>
+
+                {showAddTask && (
+                    <div className="add-form">
+                        <Form.Control
+                            className="todo-input"
+                            type="text"
+                            placeholder="Add a new daily task"
+                            value={newTask}
+                            onChange={(e) => setNewTask(e.target.value)}
+                        />
+                        <Button
+                            onClick={() => handleAddTask("daily")}
+                            className="add-button"
+                        >
+                            Add Task
+                        </Button>
+                    </div>
+                )}
+
+                {renderTaskList(dailyTasks, 'daily')}
+            </Card>
+        </div>
+    );
+}
+
+{/* <Card className="card">
+            
             <Card.Header className="card-header">
                 Daily
                 <Button onClick={() => handleAddTask("daily")} className="button">+</Button>
@@ -144,10 +182,7 @@ export default function DailyTodoList() {
                 />
             </div>
             {renderTaskList(dailyTasks, 'daily')}
-        </Card>
-    );
-}
-
+        </Card> */}
 function useLocalStorage(key, initialValue) {
     const [storedValue, setStoredValue] = useState(() => {
         try {

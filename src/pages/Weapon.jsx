@@ -35,7 +35,6 @@ export default function Weapon() {
             return;
         }
 
-        // Add character only if it's not already in the list
         if (!userWeaponToBuildList.includes(userAddWeaponToList.toLowerCase())) {
             setUserWeaponToBuildList([...userWeaponToBuildList, userAddWeaponToList.toLowerCase()]);
             setMessage(`${userAddWeaponToList} is added to the list`);
@@ -77,7 +76,7 @@ export default function Weapon() {
                                 value={userAddWeaponToList}
                                 onChange={handleInputChange}
                                 type="text"
-                                placeholder="Add Character Name"
+                                placeholder="Add Weapon Name"
                                 required
                             />
                             <Button onClick={handleAddWeapon} className="add-button">
@@ -115,7 +114,7 @@ export default function Weapon() {
                             );
                         })
                     ) : (
-                        <ListGroup.Item>No weapon ascension materials are available today for selected characters.</ListGroup.Item>
+                        <ListGroup.Item>No weapon ascension materials are available today for selected weapons.</ListGroup.Item>
                     )}
                 </ListGroup>
             </Card>

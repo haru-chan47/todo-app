@@ -73,6 +73,45 @@ body {
     background-color: #9a82aa;
 }
 
+.auth-title {
+    font-family: "Poppins", "Times New Roman";
+    font-weight: 600;
+    font-size: 3rem;
+    -webkit-text-stroke-width: 2px;
+    color: #d8a5fa;
+    -webkit-text-stroke-color: #3c2f42;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 80px;
+    margin-bottom: 50px;
+}
+
+.auth {
+    margin-left: 200px;
+}
+
+.auth-box {
+    margin-left: 300px;
+}
+
+.custom-btn {
+    background-color: #8b6f9e;
+    color: white;
+    border: none;
+    outline: 2px solid #3c2f42;
+    padding: 10px 20px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.custom-btn:focus,
+.custom-btn:hover {
+    background-color: #766283;
+    outline: 2px solid #4b3e58;
+    box-shadow: none;
+}
+
 .card-container {
     display: flex;
     flex-wrap: wrap;
@@ -123,8 +162,16 @@ body {
 }
 
 .add-input {
-    margin-left: 5px;
     width: 150px;
+    height: 40px;
+    padding: 8px;
+    font-size: 12px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+.todo-input {
+    width: 90%;
     height: 40px;
     padding: 8px;
     font-size: 12px;
@@ -279,9 +326,8 @@ body {
 }
 
 
-/* Container for the Abyss and Theatre images */
 .corner-images {
-    position: absolute;
+    position: fixed;
     top: 150px;
     right: 10px;
     display: flex;
@@ -319,25 +365,18 @@ body {
     color: #fff;
     margin-top: 100%;
     margin-left: 6px;
-    /* Space from the image */
     text-align: center;
     border-radius: 6px;
-    /* Rounded background */
     padding: 5px;
     position: absolute;
     top: 20px;
-    /* Position above the images */
     opacity: 0;
-    /* Start invisible */
     transition: opacity 0.3s;
-    /* Smooth fade-in */
     font-size: 12px;
 }
 
-/* Show timer on hover */
 .abyss-timer:hover .abyss-reset-timer,
 .theatre-timer:hover .theatre-reset-timer {
     visibility: visible;
     opacity: 1;
-    /* Fade-in effect */
 }
