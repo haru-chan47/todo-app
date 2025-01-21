@@ -278,67 +278,66 @@ body {
     border: #dfc6c0;
 }
 
-.abyss-timer {
+
+/* Container for the Abyss and Theatre images */
+.corner-images {
     position: absolute;
-    top: 350px;
+    top: 150px;
     right: 10px;
-    height: 30px;
     display: flex;
-    align-items: flex-end;
+    flex-direction: column;
+    gap: 70px;
+    z-index: 10;
 }
 
-.abyss-image {
-    width: 180px;
-    height: 180px;
-    border-radius: 10px;
+.abyss-timer,
+.theatre-timer {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
 }
 
-.abyss-reset-timer {
-    visibility: hidden;
-    background-color: rgba(0, 0, 0, 0.541);
-    color: #fff;
-    margin-left: 6px;
-    text-align: center;
-    border-radius: 6px;
-    padding: 5px;
-    position: absolute;
-    top: 20px;
-    opacity: 0;
-    transition: opacity 0.3s;
-    font-size: 12px;
-}
-
-.abyss-timer:hover .abyss-reset-timer {
-    visibility: visible;
-    opacity: 1;
-}
-
+.abyss-image,
 .theatre-image {
     width: 180px;
     height: 180px;
     border-radius: 10px;
+    transition: transform 0.3s;
 }
 
+.abyss-image:hover,
+.theatre-image:hover {
+    transform: scale(1.05);
+}
+
+.abyss-reset-timer,
 .theatre-reset-timer {
     visibility: hidden;
-    background-color: rgba(0, 0, 0, 0.541);
+    background-color: rgba(0, 0, 0, 0.7);
     color: #fff;
+    margin-top: 100%;
     margin-left: 6px;
+    /* Space from the image */
     text-align: center;
     border-radius: 6px;
+    /* Rounded background */
     padding: 5px;
     position: absolute;
     top: 20px;
+    /* Position above the images */
     opacity: 0;
+    /* Start invisible */
     transition: opacity 0.3s;
+    /* Smooth fade-in */
     font-size: 12px;
 }
 
+/* Show timer on hover */
+.abyss-timer:hover .abyss-reset-timer,
 .theatre-timer:hover .theatre-reset-timer {
     visibility: visible;
     opacity: 1;
-}
-
-.timer-container {
-    align-items: center;
+    /* Fade-in effect */
 }

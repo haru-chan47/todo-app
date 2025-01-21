@@ -35,15 +35,15 @@ export default function AbyssReset() {
     }, []);
 
     return (
-        <div className='timer-container'>
+        <div className="corner-images">
             <div className="abyss-timer">
-                <p><img src="images/abyss.jpg" alt="Abyss Image" className="abyss-image img-fluid" /></p>
+                <img src="images/abyss.jpg" alt="Abyss" className="abyss-image" />
                 <div className="abyss-reset-timer">
                     <p className="mb-1">{daysLeft} days left before</p>
                     <b className='mt-0'>Abyss resets</b>
                 </div>
-                <TheatreReset />
             </div>
+            <TheatreReset />
         </div>
     );
 }
