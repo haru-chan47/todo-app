@@ -63,7 +63,7 @@ export default function AuthPage() {
 
     return (
         <Col sm={6} className="p-4 auth">
-            <h1 className="auth-title">Paimon&apos;s Todo App</h1>
+            <h1 className="home-title">Paimon&apos;s Todo App</h1>
             <div className="auth-box">
                 <Image src={loginImage} fluid />
                 <Col sm={5} className="d-grid gap-2">

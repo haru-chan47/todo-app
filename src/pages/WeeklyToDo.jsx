@@ -7,6 +7,7 @@ export default function WeeklyTodoList() {
     const [weeklyTasks, setWeeklyTasks] = useState([]);
     const [checkedItems, setCheckedItems] = useLocalStorage("checkedItems", {});
     const [newTask, setNewTask] = useState("");
+    const [showAddTask, setShowAddTask] = useState(false);
     const [isEditing, setIsEditing] = useState(null);
     const [editTaskContent, setEditTaskContent] = useState("");
     const { currentUser } = useContext(AuthContext);
@@ -126,21 +127,39 @@ export default function WeeklyTodoList() {
     );
 
     return (
-        <Card className="card">
-            <Card.Header className="card-header">
-                Weekly
-                <Button onClick={() => handleAddTask("weekly")} className="button">+</Button>
-            </Card.Header>
-            <div className="task-input">
-                <Form.Control
-                    type="text"
-                    placeholder="Add a new weekly task"
-                    value={newTask}
-                    onChange={(e) => setNewTask(e.target.value)}
-                />
-            </div>
-            {renderTaskList(weeklyTasks, 'weekly')}
-        </Card>
+        <div className="card-container">
+            <Card className="card">
+                <Card.Header className="card-header">
+                    Weekly
+                    <Button
+                        onClick={() => setShowAddTask(!showAddTask)}
+                        className="button"
+                    >
+                        {showAddTask ? 'x' : '+'}
+                    </Button>
+                </Card.Header>
+
+                {showAddTask && (
+                    <div className="add-form">
+                        <Form.Control
+                            className="todo-input"
+                            type="text"
+                            placeholder="Add a new weekly task"
+                            value={newTask}
+                            onChange={(e) => setNewTask(e.target.value)}
+                        />
+                        <Button
+                            onClick={() => handleAddTask("weekly")}
+                            className="add-button"
+                        >
+                            Add Task
+                        </Button>
+                    </div>
+                )}
+
+                {renderTaskList(weeklyTasks, 'weekly')}
+            </Card>
+        </div>
     );
 }
 
