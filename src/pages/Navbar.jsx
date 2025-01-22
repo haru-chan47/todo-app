@@ -30,6 +30,7 @@ export default function Navbar() {
             <ul>
                 <CustomLink to="/todolist">Home</CustomLink>
                 <CustomLink to="/calculator">Calculator</CustomLink>
+                <CustomLink to="/farming-routes">Farming Routes</CustomLink>
                 <CustomLink to="/" onClick={handleLogout} className="logout-btn">Logout</CustomLink>
             </ul>
         </nav>

@@ -5,6 +5,7 @@ import Navbar from "./pages/Navbar";
 import { AuthProvider } from "./contexts/AuthProvider";
 import TodoList from "./pages/TodoList";
 import AuthPage from "./pages/AuthPage";
+import FarmingRoutes from "./pages/FarmingRoutes";
 //import { AuthContext } from "./contexts/AuthContext";
 //import useLocalStorage from "use-local-storage";
 
@@ -18,6 +19,7 @@ export default function App() {
           <Route path="/" element={<AuthPage />} />
           <Route path="/todolist" element={<TodoList />} />
           <Route path="/calculator" element={<CalculatorEXPBooks />} />
+          <Route path="/farming-routes" element={<FarmingRoutes />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>
