@@ -367,3 +367,14 @@ body {
     visibility: visible;
     opacity: 1;
 }
+
+.upload-button {
+    background-color: #D0D991;
+    border: 1px solid #c3cc8a;
+    border-radius: 5px;
+}
+
+.upload-button:hover {
+    background-color: #F2D5CE;
+    border: #dfc6c0;
+}

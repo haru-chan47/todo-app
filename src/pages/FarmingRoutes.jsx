@@ -1,55 +1,92 @@
-import { useEffect, useState } from "react";
-import { getStorage, ref, uploadBytes, getDownloadURL, listAll, deleteObject } from "firebase/storage";
+import { useContext, useEffect, useState } from "react";
+import {
+    getStorage,
+    ref,
+    uploadBytes,
+    getDownloadURL,
+    deleteObject,
+} from "firebase/storage";
 import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
-import { addDoc, collection } from "firebase/firestore";
+import {
+    addDoc,
+    collection,
+    getDocs,
+    query,
+    where,
+    deleteDoc,
+    doc,
+} from "firebase/firestore";
 import { db } from "../firebase";
+import { AuthContext } from "../contexts/AuthProvider";
 
 export default function FarmingRoutes() {
-    const [image, setImage] = useState(null); // For selected file
-    const [imageName, setImageName] = useState(""); // For image naming
-    const [uploadedImages, setUploadedImages] = useState([]); // List of uploaded images
-    const storage = getStorage(); // Firebase storage instance
+    const [image, setImage] = useState(null);
+    const [imageName, setImageName] = useState("");
+    const [uploadedImages, setUploadedImages] = useState([]);
+    const storage = getStorage();
+    const { currentUser } = useContext(AuthContext);
+    const userId = currentUser ? currentUser.uid : null;
 
-    // Handle file selection
     const handleFileChange = (e) => {
         if (e.target.files[0]) {
             setImage(e.target.files[0]);
         }
     };
 
-    // Handle image upload
-    const handleUpload = () => {
-        if (!image) return;
-
-        // Upload image to Firebase Storage
-        const storageRef = ref(storage, `images/${image.name}`);
-        uploadBytes(storageRef, image).then((snapshot) => {
-            getDownloadURL(snapshot.ref).then((url) => {
-                // Save image URL and name in Firestore
-                const imageData = {
-                    name: imageName, // The name the user provides
-                    url: url,        // The image URL
-                };
-
-                // Store in Firestore (replace with your Firestore setup)
-                addDoc(collection(db, "images"), imageData)
-                    .then(() => {
-                        console.log("Image uploaded successfully");
-                    })
-                    .catch((error) => {
-                        console.error("Error uploading image:", error);
-                    });
-            });
-        });
-    };
-
-    // Handle image deletion
-    const handleDelete = async (path) => {
-        const imageRef = ref(storage, path); // Get reference to the image
+    const handleUpload = async () => {
+        if (!image || !userId) {
+            alert("Please select an image and ensure you're logged in.");
+            return;
+        }
 
         try {
-            await deleteObject(imageRef); // Delete the image
-            setUploadedImages((prev) => prev.filter((img) => img.path !== path)); // Remove from state
+            const storageRef = ref(storage, `images/${userId}/${image.name}`);
+            const snapshot = await uploadBytes(storageRef, image);
+            const url = await getDownloadURL(snapshot.ref);
+
+            const imageData = {
+                name: imageName || "Unnamed Image",
+                url,
+                userId,
+                storagePath: snapshot.ref.fullPath,
+            };
+
+            await addDoc(collection(db, "images"), imageData);
+
+            // Update local state
+            setUploadedImages((prev) => [...prev, imageData]);
+            setImage(null);
+            setImageName("");
+            alert("Image uploaded successfully!");
+        } catch (error) {
+            console.error("Error uploading image:", error);
+            alert("Failed to upload image.");
+        }
+    };
+
+    const handleDelete = async (image) => {
+        if (image.userId !== userId) {
+            alert("You can only delete your own images.");
+            return;
+        }
+
+        const imageRef = ref(storage, image.storagePath);
+
+        try {
+            await deleteObject(imageRef);
+            const imageDocQuery = query(
+                collection(db, "images"),
+                where("url", "==", image.url)
+            );
+            const imageDocs = await getDocs(imageDocQuery);
+
+            imageDocs.forEach(async (docSnapshot) => {
+                await deleteDoc(doc(db, "images", docSnapshot.id));
+            });
+
+            setUploadedImages((prev) =>
+                prev.filter((img) => img.url !== image.url)
+            );
             alert("Image deleted successfully!");
         } catch (error) {
             console.error("Error deleting image:", error);
@@ -57,33 +94,45 @@ export default function FarmingRoutes() {
         }
     };
 
-    // Fetch and display all uploaded images
     useEffect(() => {
         const fetchImages = async () => {
-            const imagesRef = ref(storage, "farming-images");
+            if (!userId) return;
+
+            const imagesQuery = query(
+                collection(db, "images"),
+                where("userId", "==", userId)
+            );
+
             try {
-                const imageList = await listAll(imagesRef); // Get all images in the directory
-                const urls = await Promise.all(
-                    imageList.items.map(async (item) => {
-                        const url = await getDownloadURL(item); // Get URL
-                        return { url, name: item.name, path: item.fullPath }; // Add path and name
-                    })
-                );
-                setUploadedImages(urls); // Set state with image data
+                const querySnapshot = await getDocs(imagesQuery);
+                const images = querySnapshot.docs.map((doc) => ({
+                    id: doc.id,
+                    ...doc.data(),
+                }));
+                setUploadedImages(images);
             } catch (error) {
                 console.error("Error fetching images:", error);
             }
         };
 
         fetchImages();
-    }, []);
+    }, [userId]);
 
     return (
-        <Container fluid style={{ backgroundColor: "#121212", color: "#fff", minHeight: "100vh", padding: "20px" }}>
-            <h1 className="text-center mb-4">Farming Image Upload</h1>
+        <Container
+            fluid
+            style={{
+                minHeight: "100vh",
+                padding: "20px",
+            }}
+        >
+            <h1 className="home-title">Your Farming Routes</h1>
 
             <div className="d-flex justify-content-center align-items-center mb-4 gap-3">
-                <input type="file" onChange={handleFileChange} style={{ color: "#fff" }} />
+                <input
+                    type="file"
+                    onChange={handleFileChange}
+                />
                 <Form.Control
                     type="text"
                     placeholder="Enter image name"
@@ -91,13 +140,11 @@ export default function FarmingRoutes() {
                     onChange={(e) => setImageName(e.target.value)}
                     style={{ maxWidth: "300px" }}
                 />
-                <Button variant="success" onClick={handleUpload}>
+                <Button className="upload-button" onClick={handleUpload}>
                     Upload Image
                 </Button>
             </div>
 
-
-            {/* Display Uploaded Images in Cards */}
             <Row className="gy-4">
                 {uploadedImages.map((img, index) => (
                     <Col sm={6} md={4} lg={3} key={index}>
@@ -120,9 +167,20 @@ export default function FarmingRoutes() {
                                 }}
                             />
                             <Card.Body>
-                                <Card.Title style={{ color: "#fff", textAlign: "center" }}>{img.name}</Card.Title>
+                                <Card.Title
+                                    style={{
+                                        color: "#fff",
+                                        textAlign: "center",
+                                    }}
+                                >
+                                    {img.name}
+                                </Card.Title>
                                 <div className="d-flex justify-content-center">
-                                    <Button variant="danger" size="sm" onClick={() => handleDelete(img.path)}>
+                                    <Button
+                                        variant="danger"
+                                        size="sm"
+                                        onClick={() => handleDelete(img)}
+                                    >
                                         Delete
                                     </Button>
                                 </div>
@@ -133,4 +191,4 @@ export default function FarmingRoutes() {
             </Row>
         </Container>
     );
-};
+}
