@@ -36,6 +36,7 @@ body {
     align-items: stretch;
     gap: 2rem;
     padding: 0 1rem;
+    z-index: 10;
 }
 
 .site-title {
